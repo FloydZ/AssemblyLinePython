@@ -4,6 +4,7 @@ from AssemblyLinePython import AssemblyLineBinary
 
 def test_version():
     """
+    test the version 1.3.2
     """
     t = AssemblyLineBinary("./dummy")
     version = t.__version__()
@@ -12,6 +13,7 @@ def test_version():
 
 def test_string():
     """
+    test the string interface
     """
     t = AssemblyLineBinary("./mov rax, 0x0\nadd rax, 0x2; adds two")
     t.print().strict().run()
