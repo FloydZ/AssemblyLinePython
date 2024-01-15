@@ -5,6 +5,8 @@ from pathlib import Path
 import logging
 import ctypes
 import re
+import os
+import tempfile
 import mmap
 from mmap import MAP_ANONYMOUS, MAP_PRIVATE, PROT_EXEC, PROT_READ, PROT_WRITE
 
@@ -18,7 +20,7 @@ class AssemblyLineLibrary:
     """
     wrapper around `assemblyline.{so}`
     """
-    LIBRARY = Path("../deps/AssemblyLine/.libs/libassemblyline.so").absolute()
+    LIBRARY = Path("deps/AssemblyLine/.libs/libassemblyline.so").absolute()
     C_LIBRARY = ctypes.CDLL(LIBRARY)
 
     # needed for `mmap`
@@ -152,21 +154,35 @@ class AssemblyLineLibrary:
         assert option < 3
         raise NotImplemented
 
-        # TODO asm_sib_index_base_swap, asm_sib_no_base, asm_sib, asm_set_all
-
+    def asm_sib_index_base_swap(self, option: int):
+        raise NotImplemented
+    def asm_sib_no_base(self, option: int):
+        raise NotImplemented
+    def asm_sib(self, option: int):
+        raise NotImplemented
+    def asm_set_all(self, option: int):
+        raise NotImplemented
 
 
 class AssemblyLineBinary:
     """
     Wrapper around the `asmline` binary
     """
-    BINARY = "../deps/AssemblyLine/tools/asmline"
+    BINARY = "deps/AssemblyLine/tools/asmline"
 
     def __init__(self, file: Union[Path, str]):
         """
         :param file: the file to assemble into memory
         """
-        self.file = file
+        if type(file) ==  str:
+            if os.path.isfile(file):
+                self.file = file
+            else:
+                self.__file = tempfile.NamedTemporaryFile()
+                self.file = self.__file.name
+                self.__file.write(file.encode())
+        else:
+            self.file =  file.absolute()
         self.command = []
 
     def run(self):

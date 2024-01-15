@@ -9,4 +9,4 @@ __email__ = "zweydfg8+github@rub.de"
 __status__ = "Development"
 
 
-from .execute import *
+from .execute import AssemblyLineBinary
