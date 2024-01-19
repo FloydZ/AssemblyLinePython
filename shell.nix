@@ -9,7 +9,6 @@ let
     requirements = builtins.readFile ./requirements.txt;
   };
 in
-#pkgs.mkShell {
 mach-nix.nixpkgs.mkShell {
   buildInputs = with pkgs;[
     clang
