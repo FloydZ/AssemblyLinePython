@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 from AssemblyLinePython import __version__, __author__, __email__
-import subprocess
+import os
 from setuptools import setup
-from distutils.command.install import install as _install
-from setuptools.command.build_ext import build_ext as _build_ext
+from setuptools.command.install import install
+from setuptools.command.develop import develop
+from setuptools.command.egg_info import egg_info
 from setuptools.command.build import build
 
 
@@ -12,11 +13,29 @@ def read_text_file(path):
     with open(os.path.join(os.path.dirname(__file__), path)) as f:
         return f.read()
 
+def custom_command():
+    import sys
+    if sys.platform in ['linux']:
+        os.system('./build.sh')
 
-class MyBuild(build):
+
+class CustomInstallCommand(install):
     def run(self):
-        subprocess.call(["/usr/bin/env", "bash", './build.sh'])
-        build.run(self)
+        install.run(self)
+        custom_command()
+
+
+class CustomDevelopCommand(develop):
+    def run(self):
+        develop.run(self)
+        custom_command()
+
+
+class CustomEggInfoCommand(egg_info):
+    def run(self):
+        egg_info.run(self)
+        custom_command()
+
 
 setup(
     name="AssemblyLinePython",
@@ -29,7 +48,11 @@ setup(
     packages=["AssemblyLinePython"],
     keywords=["assembly", "assembler", "asm", "opcodes", "x86", "x86-64", "isa", "cpu"],
     install_requires=["setuptools",],
-    cmdclass={'install': MyBuild},
+   cmdclass={
+        'install': CustomInstallCommand,
+        'develop': CustomDevelopCommand,
+        'egg_info': CustomEggInfoCommand,
+    },
     package_data={'pkgtest': ['deps/AssemblyLine/.libs/libasseblyline.so',
                               'deps/AssemblyLine/.libs/libasseblyline.so.1.2.5'
                               'deps/AssemblyLine/.libs/libasseblyline.a']},
