@@ -21,20 +21,20 @@ def custom_command():
 
 class CustomInstallCommand(install):
     def run(self):
-        install.run(self)
         custom_command()
+        install.run(self)
 
 
 class CustomDevelopCommand(develop):
     def run(self):
-        develop.run(self)
         custom_command()
+        develop.run(self)
 
 
 class CustomEggInfoCommand(egg_info):
     def run(self):
-        egg_info.run(self)
         custom_command()
+        egg_info.run(self)
 
 
 setup(
@@ -48,12 +48,12 @@ setup(
     packages=["AssemblyLinePython"],
     keywords=["assembly", "assembler", "asm", "opcodes", "x86", "x86-64", "isa", "cpu"],
     install_requires=["setuptools",],
-   cmdclass={
+    cmdclass={
         'install': CustomInstallCommand,
         'develop': CustomDevelopCommand,
         'egg_info': CustomEggInfoCommand,
     },
-    package_data={'pkgtest': ['deps/AssemblyLine/.libs/libasseblyline.so',
+    package_data={'': ['deps/AssemblyLine/.libs/libasseblyline.so',
                               'deps/AssemblyLine/.libs/libasseblyline.so.1.2.5'
                               'deps/AssemblyLine/.libs/libasseblyline.a']},
     requires=[],
@@ -69,4 +69,5 @@ setup(
         "Topic :: Software Development",
         "Topic :: Software Development :: Assemblers",
         "Topic :: Software Development :: Documentation"
-    ])
+    ]
+)
