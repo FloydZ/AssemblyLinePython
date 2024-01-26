@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from AssemblyLinePython import __version__, __author__, __email__
+import subprocess
 from setuptools import setup
+from distutils.command.install import install as _install
 
 
 def read_text_file(path):
@@ -8,6 +10,11 @@ def read_text_file(path):
     with open(os.path.join(os.path.dirname(__file__), path)) as f:
         return f.read()
 
+
+class install(_install):
+    def run(self):
+        subprocess.call(['./build.sh'])
+        _install.run(self)
 
 setup(
     name="AssemblyLinePython",

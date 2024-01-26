@@ -21,14 +21,6 @@ mach-nix.nixpkgs.mkShell {
   ];
 
   shellHook = ''
-    # build underlying C projects
-    cd deps/AssemblyLine
-    #./autogen.sh
-    ./configure
-    make
-    cd ../..
-
-    # build the python package for development
-    pip install --editable .
+    ./build.sh
   '';
 }

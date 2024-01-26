@@ -7,3 +7,4 @@ Session.vim
 cmake-build-release/
 cmake-build-debug/
 *__pycache__/
+venv/
