@@ -13,7 +13,7 @@ def read_text_file(path):
 
 class install(_install):
     def run(self):
-        subprocess.call(['./build.sh'])
+        subprocess.call(["/usr/bin/env", "bash", './build.sh'])
         _install.run(self)
 
 setup(
@@ -26,7 +26,11 @@ setup(
     url="https://github.com/FloydZ/python_x86_information",
     packages=["AssemblyLinePython"],
     keywords=["assembly", "assembler", "asm", "opcodes", "x86", "x86-64", "isa", "cpu"],
-    install_requires=["setuptools"],
+    install_requires=["setuptools",],
+    cmdclass={'install': install},
+    package_data={'pkgtest': ['deps/AssemblyLine/.libs/libasseblyline.so',
+                              'deps/AssemblyLine/.libs/libasseblyline.so.1.2.5'
+                              'deps/AssemblyLine/.libs/libasseblyline.a']},
     requires=[],
     classifiers=[
         "Development Status :: 4 - Beta",
