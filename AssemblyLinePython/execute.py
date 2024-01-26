@@ -21,14 +21,14 @@ class AssemblyLineLibrary:
     wrapper around `assemblyline.{so}`
     """
     LIBRARY = Path("deps/AssemblyLine/.libs/libassemblyline.so").absolute()
-    C_LIBRARY = ctypes.CDLL(LIBRARY)
-
-    # needed for `mmap`
-    LIBC = ctypes.CDLL("libc.so.6")     
 
     def __init__(self):
         """
         """
+        self.C_LIBRARY = ctypes.CDLL(AssemblyLineLibrary.LIBRARY)
+
+        # needed for `mmap`
+        self.LIBC = ctypes.CDLL("libc.so.6")     
         self.mmap = None
         self.struct = None
         self.size = 4000
@@ -48,7 +48,7 @@ class AssemblyLineLibrary:
         assert size > 0
 
         # TODO not working: (mmap code is either not executable or not writeable)
-        self.mmap = AssemblyLineLibrary.LIBC.mmap(0, size, PROT_READ|PROT_WRITE|PROT_EXEC, 
+        self.mmap = self.LIBC.mmap(0, size, PROT_READ|PROT_WRITE|PROT_EXEC, 
                                                  MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)
         self.mmap = ctypes.c_char_p(self.mmap)
         if self.mmap == -1:
@@ -61,7 +61,7 @@ class AssemblyLineLibrary:
         
         self.mmap = ctypes.create_string_buffer(size)
 
-        self.instance = AssemblyLineLibrary.C_LIBRARY.asm_create_instance(self.mmap, size)
+        self.instance = self.C_LIBRARY.asm_create_instance(self.mmap, size)
         assert self.mmap
         assert self.instance
         return SUCCESS
@@ -75,7 +75,7 @@ class AssemblyLineLibrary:
         :return: 0 on success, 1 on failure
         """
         assert self.instance
-        ret = AssemblyLineLibrary.C_LIBRARY.asm_destroy_instance(self.instance)
+        ret = self.C_LIBRARY.asm_destroy_instance(self.instance)
         if ret == FAILURE:
             logging.error("asm_destroy_instance failed")
         return ret
@@ -90,7 +90,7 @@ class AssemblyLineLibrary:
         :return: nothing
         """
         assert self.instance
-        AssemblyLineLibrary.C_LIBRARY.asm_set_debug(self.instance, debug)
+        self.C_LIBRARY.asm_set_debug(self.instance, debug)
     
     def asm_assemble_str(self, asm: str):
         """
@@ -100,8 +100,7 @@ class AssemblyLineLibrary:
         :return: 0 on success, 1 on failure
         """
         c_asm = ctypes.c_char_p(str.encode(asm))
-        print("lel")
-        ret = AssemblyLineLibrary.C_LIBRARY.asm_assemble_str(self.instance, c_asm)
+        ret = self.C_LIBRARY.asm_assemble_str(self.instance, c_asm)
         print(self.mmap)
         if ret == FAILURE:
             logging.error("asm_assemble_str failed on: " + asm)
@@ -115,7 +114,7 @@ class AssemblyLineLibrary:
         :param file: string/path to the file to assemble
         :return: 0 on success, 1 on failure
         """
-        ret = AssemblyLineLibrary.C_LIBRARY.asm_assemble_file(self.instance, file)
+        ret = self.C_LIBRARY.asm_assemble_file(self.instance, file)
         if ret == FAILURE:
             logging.error("asm_assemble_file failed on: " + file)
         return ret
@@ -127,7 +126,7 @@ class AssemblyLineLibrary:
         :return f: a function of the assembled 
         """
         FUNC = ctypes.CFUNCTYPE(None)
-        ret_ptr = AssemblyLineLibrary.C_LIBRARY.asm_get_code(self.instance)
+        ret_ptr = self.C_LIBRARY.asm_get_code(self.instance)
         assert ret_ptr
         f = FUNC(ret_ptr)
         return f
