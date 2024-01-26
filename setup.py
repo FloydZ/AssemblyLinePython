@@ -46,7 +46,7 @@ setup(
     author_email=__email__,
     url="https://github.com/FloydZ/AssemblyLinePython",
     #packages=[""],
-    package_dir={"": "AssemblyLinePython"},
+    package_dir={"": "./"},
     keywords=["assembly", "assembler", "asm", "opcodes", "x86", "x86-64", "isa", "cpu"],
     install_requires=["setuptools",],
     cmdclass={
