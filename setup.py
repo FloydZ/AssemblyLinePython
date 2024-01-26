@@ -3,6 +3,8 @@ from AssemblyLinePython import __version__, __author__, __email__
 import subprocess
 from setuptools import setup
 from distutils.command.install import install as _install
+from setuptools.command.build_ext import build_ext as _build_ext
+from setuptools.command.build import build
 
 
 def read_text_file(path):
@@ -11,10 +13,10 @@ def read_text_file(path):
         return f.read()
 
 
-class install(_install):
+class MyBuild(build):
     def run(self):
         subprocess.call(["/usr/bin/env", "bash", './build.sh'])
-        _install.run(self)
+        build.run(self)
 
 setup(
     name="AssemblyLinePython",
@@ -23,11 +25,11 @@ setup(
     long_description=read_text_file("README.md"),
     author=__author__,
     author_email=__email__,
-    url="https://github.com/FloydZ/python_x86_information",
+    url="https://github.com/FloydZ/AssemblyLinePython",
     packages=["AssemblyLinePython"],
     keywords=["assembly", "assembler", "asm", "opcodes", "x86", "x86-64", "isa", "cpu"],
     install_requires=["setuptools",],
-    cmdclass={'install': install},
+    cmdclass={'install': MyBuild},
     package_data={'pkgtest': ['deps/AssemblyLine/.libs/libasseblyline.so',
                               'deps/AssemblyLine/.libs/libasseblyline.so.1.2.5'
                               'deps/AssemblyLine/.libs/libasseblyline.a']},
