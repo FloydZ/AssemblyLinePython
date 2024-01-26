@@ -39,14 +39,13 @@ class CustomEggInfoCommand(egg_info):
 
 setup(
     name="AssemblyLinePython",
-    version=__version__,
-    description="TODO",
     long_description="TODO",
     author=__author__,
     author_email=__email__,
+    version=__version__,
+    description="TODO",
     url="https://github.com/FloydZ/AssemblyLinePython",
-    #packages=[""],
-    package_dir={"": "./"},
+    package_dir={"": "AssemblyLinePython"},
     keywords=["assembly", "assembler", "asm", "opcodes", "x86", "x86-64", "isa", "cpu"],
     install_requires=["setuptools",],
     cmdclass={
@@ -54,9 +53,7 @@ setup(
         'develop': CustomDevelopCommand,
         'egg_info': CustomEggInfoCommand,
     },
-    package_data={'': ['deps/AssemblyLine/.libs/libasseblyline.so',
-                              'deps/AssemblyLine/.libs/libasseblyline.so.1.2.5'
-                              'deps/AssemblyLine/.libs/libasseblyline.a']},
+    package_data={'': ['deps/']},
     requires=[],
     classifiers=[
         "Development Status :: 4 - Beta",

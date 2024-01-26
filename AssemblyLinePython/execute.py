@@ -406,6 +406,6 @@ class AssemblyLineBinary:
 
 
 # a = AssemblyLineLibrary()
-b = AssemblyLineBinary("../deps/AssemblyLine/test/or.asm")
-print(b.__version__())
-b.print().strict().run()
+#b = AssemblyLineBinary("../deps/AssemblyLine/test/or.asm")
+#print(b.__version__())
+#b.print().strict().run()
