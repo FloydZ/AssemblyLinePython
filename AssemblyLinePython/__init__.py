@@ -10,3 +10,4 @@ __status__ = "Development"
 
 
 from .execute import AssemblyLineBinary
+from .library import AssemblyLineLibrary

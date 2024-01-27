@@ -24,23 +24,40 @@ Flags:
 The wrapper library supports the same flags as [asmline](https://github.com/0xADE1A1DE/AssemblyLine/tree/main/tools).
 E.g.:
 ```python
+t = AssemblyLineBinary(test)
 t.assemble()
-.rand()
-.print()
-.Print()
-.object_()
-.chunk(chunk_size)
-.nasm_mov_imm()
-.strict_mov_imm()
-.smart_mov_imm()
-.nasm_sib_index_base_swap()
-.strict_sib_index_base_swap()
-.nasm_sib_no_base()
-.strict_sib_no_base()
-.nasm_sib()
-.strict_sib()
-.nasm()
-.strict()
+    # memory will initialize with ranfom memory
+    .rand()
+    # output the assembly in a hex format
+    .print()
+    # output the assembly into file
+    .Print(file)
+    #  output the machine code into an object file
+    .object_(file)
+    # 
+    .chunk(chunk_size)
+    #
+    .nasm_mov_imm()
+    #
+    .strict_mov_imm()
+    #
+    .smart_mov_imm()
+    #
+    .nasm_sib_index_base_swap()
+    #
+    .strict_sib_index_base_swap()
+    #
+    .nasm_sib_no_base()
+    #
+    .strict_sib_no_base()
+    k#
+    .nasm_sib()
+    #
+    .strict_sib()
+    #
+    .nasm()
+    #
+    .strict()
 ```
 
 more details are [here](https://github.com/FloydZ/AssemblyLinePython/blob/ed17efe46a4e474368bb5ded5108643eb90424ab/AssemblyLinePython/execute.py#L159)
@@ -82,6 +99,7 @@ pip install --editable .
 
 Known bugs:
 ===========
-Currently the class `AssemblyLineLibrary` currently cannot execute an assembled
+ - Currently the class `AssemblyLineLibrary` currently cannot execute an assembled
 function. This is due to the fact that the mem allocated by `create_string_buffer`
 is not executeable. And my `mmap` wrapper is not really working.
+- implement the incremental API
