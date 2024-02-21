@@ -3,14 +3,14 @@ from typing import Union
 from subprocess import Popen, PIPE, STDOUT
 from pathlib import Path
 import logging
-import re
 import os
-import tempfile
 import ctypes
-import mmap
 from mmap import MAP_ANONYMOUS, MAP_PRIVATE, PROT_EXEC, PROT_READ, PROT_WRITE
-from .common import DEBUG, SUCCESS, FAILURE
-from ctypes import CFUNCTYPE
+#from ctypes import CFUNCTYPE
+from .common import SUCCESS, FAILURE
+#import tempfile
+#import re
+#import mmap
 
 
 class AssemblyLineLibrary:

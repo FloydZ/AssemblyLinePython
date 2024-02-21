@@ -2,5 +2,6 @@ pathlib
 argparse
 pycparser
 pytest
+pylint
 sphinx
 sphinx_bootstrap_theme
