@@ -18,6 +18,7 @@ mach-nix.nixpkgs.mkShell {
     autoconf
     automake
     libtool
+    pkg-config
   ];
 
   shellHook = ''

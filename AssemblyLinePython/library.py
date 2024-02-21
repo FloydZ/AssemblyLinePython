@@ -10,6 +10,7 @@ import ctypes
 import mmap
 from mmap import MAP_ANONYMOUS, MAP_PRIVATE, PROT_EXEC, PROT_READ, PROT_WRITE
 from .common import DEBUG, SUCCESS, FAILURE
+from ctypes import CFUNCTYPE
 
 
 class AssemblyLineLibrary:
@@ -45,6 +46,8 @@ class AssemblyLineLibrary:
         self.__asm_set_debug(True)
         self.asm_assemble_str(self.__data)
         f = self.asm_get_code()
+        print("pid", os.getpid())
+        input()
         a = f()
         self.__f = f
         self.__asm_destroy_instance()
@@ -134,10 +137,12 @@ class AssemblyLineLibrary:
         :return f: a function of the assembled
         """
         FUNC = ctypes.CFUNCTYPE(None)
+        self.C_LIBRARY.asm_get_code.restype = FUNC
         ret_ptr = self.C_LIBRARY.asm_get_code(self.instance)
         assert ret_ptr
-        f = FUNC(ret_ptr)
-        return f
+        return ret_ptr
+        # f = FUNC(ret_ptr)
+        # return f
 
     def asm_create_bin_file(self, file: Union[str, Path]):
         """
@@ -173,3 +178,5 @@ class AssemblyLineLibrary:
     def asm_set_all(self, option: int):
         raise NotImplemented
 
+
+t = AssemblyLineLibrary("mov rax, 0x0\nadd rax, 0x2;\n sub rax, 0x1\nret")
