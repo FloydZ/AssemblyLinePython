@@ -1,37 +1,39 @@
 #!/usr/bin/env python3
-from AssemblyLinePython import __version__, __author__, __email__
+""" install script """
 import os
+import sys
 from setuptools import setup
 from setuptools.command.install import install
 from setuptools.command.develop import develop
 from setuptools.command.egg_info import egg_info
-from setuptools.command.build import build
+from AssemblyLinePython import __version__, __author__, __email__
 
 
 def read_text_file(path):
-    import os
-    with open(os.path.join(os.path.dirname(__file__), path)) as f:
-        return f.read()
+    with open(os.path.join(os.path.dirname(__file__), path)) as file:
+        return file.read()
 
 def custom_command():
-    import sys
     if sys.platform in ['linux']:
         os.system('./build.sh')
 
 
 class CustomInstallCommand(install):
+    """ install script """
     def run(self):
         custom_command()
         install.run(self)
 
 
 class CustomDevelopCommand(develop):
+    """ develop script """
     def run(self):
         custom_command()
         develop.run(self)
 
 
 class CustomEggInfoCommand(egg_info):
+    """ custom script """
     def run(self):
         custom_command()
         egg_info.run(self)
