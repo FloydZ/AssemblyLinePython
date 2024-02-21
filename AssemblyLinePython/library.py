@@ -179,4 +179,4 @@ class AssemblyLineLibrary:
         raise NotImplemented
 
 
-t = AssemblyLineLibrary("mov rax, 0x0\nadd rax, 0x2;\n sub rax, 0x1\nret")
+# t = AssemblyLineLibrary("mov rax, 0x0\nadd rax, 0x2;\n sub rax, 0x1\nret")

@@ -37,15 +37,14 @@ class AssemblyLineBinary:
 
     def run(self):
         """
-
         :return
         """
         cmd = [AssemblyLineBinary.BINARY] + self.command + [self.file]
         p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-        p.wait()
+        # p.wait()
         if p.returncode != 0:
             assert p.stdout
-            logging.error("could not run: %d %s %d", str(p.returncode), str(cmd), \
+            logging.error("could not run: %s %s %s", p.returncode, str(cmd), \
                     p.stdout.read().decode("utf-8"))
             return p.returncode
 
@@ -241,7 +240,7 @@ class AssemblyLineBinary:
         p.wait()
         if p.returncode != 0:
             assert p.stdout
-            logging.error("could not run: %d %s %s", str(p.returncode), str(cmd), \
+            logging.error("could not run: %s %s %s", str(p.returncode), str(cmd), \
                     p.stdout.read().decode("utf-8"))
             return p.returncode
 
