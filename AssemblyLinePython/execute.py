@@ -8,10 +8,7 @@ import logging
 import re
 import os
 import tempfile
-#import ctypes
-#import mmap
-#from mmap import MAP_ANONYMOUS, MAP_PRIVATE, PROT_EXEC, PROT_READ, PROT_WRITE
-#from .common import DEBUG, SUCCESS, FAILURE
+import time
 
 
 class AssemblyLineBinary:
@@ -24,27 +21,29 @@ class AssemblyLineBinary:
         """
         :param file: the file or str to assemble into memory
         """
+        self.__file = tempfile.NamedTemporaryFile(suffix=".asm")
         if isinstance(file, str):
             if os.path.isfile(file):
                 self.file = file
             else:
-                self.__file = tempfile.NamedTemporaryFile()
-                self.file = self.__file.name
                 self.__file.write(file.encode())
+                self.__file.seek(0)
+                self.file = self.__file.name
         else:
             self.file = file.absolute()
         self.command = []
+        self.__print = False
 
     def run(self):
         """
         :return
         """
         cmd = [AssemblyLineBinary.BINARY] + self.command + [self.file]
-        p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-        # p.wait()
+        p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
+        p.wait()
         if p.returncode != 0:
             assert p.stdout
-            logging.error("could not run: %s %s %s", p.returncode, str(cmd), \
+            print("could not run: %s %s %s", p.returncode, str(cmd), \
                     p.stdout.read().decode("utf-8"))
             return p.returncode
 
@@ -53,8 +52,11 @@ class AssemblyLineBinary:
         data = [str(a).replace("b'", "")
                       .replace("\\n'", "")
                       .lstrip() for a in data]
-        print(data)
-        return 1
+        if self.__print:
+            data = "".join(data).replace(" ", "")
+            data = bytes(data.encode())
+            self.__print = False
+        return data
 
     def assemble(self, length: int=10):
         """
@@ -88,6 +90,7 @@ class AssemblyLineBinary:
         chunks are delimited by '|' and each chunk is
         on one line.
         """
+        self.__print = True
         self.command.append("--print")
         return self
 
