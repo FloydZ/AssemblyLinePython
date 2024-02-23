@@ -129,8 +129,8 @@ class AssemblyLineBinary:
     def nasm_mov_imm(self):
         """
         Enables nasm-style mov-immediate register-size
-        handling. ex: if immediate size for mov is les
-        than or equal to max signed 32 bit assemblyline
+        handling. ex: if immediate size for mov is less
+        than or equal to max signed 32 bit. Assemblyline
         will emit code to mov to the 32-bit register
         rather than 64-bit. That is:
         "mov rax,0x7fffffff" as "mov eax,0x7fffffff"

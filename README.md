@@ -1,6 +1,6 @@
 AssemblyLineLibrary
 ===================
-Wrapper class around [AssemblyLine](https://github.com/0xADE1A1DE/AssemblyLine)
+Wrapper around [AssemblyLine](https://github.com/0xADE1A1DE/AssemblyLine)
 to generate machine of x86_64 assembly code on the fly without calling an 
 assembler or compiler.
 
@@ -32,31 +32,36 @@ t.assemble()
     .print()
     # output the assembly into file
     .Print(file)
-    #  output the machine code into an object file
+    # output the machine code into an object file
     .object_(file)
-    # 
+    # each input will be aligned to the given boundary in bytes. NOP instructions
+    # are used for the alignment
     .chunk(chunk_size)
-    #
+    # Enables nasm-style mov-immediate register-size handling.
     .nasm_mov_imm()
-    #
+    # Disables nasm-style mov-immediate register-size handling.
     .strict_mov_imm()
-    #
+    # The immediate value will be checked for leading 0's, to decide if the
+    # nasm mov style should be used or not.
     .smart_mov_imm()
-    #
+    # In SIB addressing if the index register is esp or rsp then the base and
+    # index registers will be swapped.
     .nasm_sib_index_base_swap()
     #
     .strict_sib_index_base_swap()
-    #
+    # In SIB addressing if there is no base register present and scale is equal
+    # to 2; the base register will be set to the index register and the scale
+    # will be reduced to 1.
     .nasm_sib_no_base()
     #
     .strict_sib_no_base()
-    k#
+    # equivalent to `.nasm_sib_index_base_swap().nasm_sib_no_base()`
     .nasm_sib()
-    #
+    # equivalent to `.strict_sib_index_base_swap().strict_sib_no_base()`
     .strict_sib()
-    #
+    # equivalent to `.nasm_mov_imm().nasm_sib()`
     .nasm()
-    #
+    # equivalent to `.strict_mov_imm().strict_sib()`
     .strict()
 ```
 
@@ -72,15 +77,16 @@ Note: the following packages need to be accessible via shell:
 - `autoconf`
 - `automake`
 - `libtool`
+- `pkg-config`
 
 Build:
 ======
-You can build the project either via nix:
+You can build the project either via `nix`:
 ```bash
 git clone https://github.com/FloydZ/AssemblyLinePython
 cd AssemblyLineLibrary
 nix-shell  
-```        
+```
 which gives you a precompiled development environment or run:
 ```bash
 git clone https://github.com/FloydZ/AssemblyLinePython
@@ -88,7 +94,7 @@ cd AssemblyLineLibrary
 pip install -r requirements.txt
 
 cd deps/AssemblyLine
-#./autogen.sh
+./autogen.sh
 ./configure
 make
 cd ../..
