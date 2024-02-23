@@ -17,7 +17,7 @@ class AssemblyLineLibrary:
     """
     wrapper around `assemblyline.{so}`
     """
-    LIBRARY = "../deps/AssemblyLine/.libs/libassemblyline.so"
+    LIBRARY = "deps/AssemblyLine/.libs/libassemblyline.so"
 
     def __init__(self, file: Union[Path, str]):
         """
