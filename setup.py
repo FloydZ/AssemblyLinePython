@@ -10,10 +10,12 @@ from AssemblyLinePython import __version__, __author__, __email__
 
 
 def read_text_file(path):
+    """ read a test file and returns its content"""
     with open(os.path.join(os.path.dirname(__file__), path)) as file:
         return file.read()
 
 def custom_command():
+    """ build the needed `AssemblyLine` package """
     if sys.platform in ['linux']:
         os.system('./build.sh')
 
