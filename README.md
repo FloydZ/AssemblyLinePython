@@ -26,7 +26,7 @@ E.g.:
 ```python
 t = AssemblyLineBinary(test)
 t.assemble()
-    # memory will initialize with ranfom memory
+    # memory will initialize with random memory
     .rand()
     # output the assembly in a hex format
     .print()
@@ -64,7 +64,6 @@ t.assemble()
     # equivalent to `.strict_mov_imm().strict_sib()`
     .strict()
 ```
-
 more details are [here](https://github.com/FloydZ/AssemblyLinePython/blob/ed17efe46a4e474368bb5ded5108643eb90424ab/AssemblyLinePython/execute.py#L159)
 
 Install:
@@ -79,25 +78,31 @@ Note: the following packages need to be accessible via shell:
 - `libtool`
 - `pkg-config`
 
+These can be installed via:
+### Ubuntu:
+```shell 
+sudo apt install autotools make pkg-config
+```
+
+### Arch:
+```shell 
+sudo pacman -S autotools make pkg-config
+```
+
 Build:
 ======
 You can build the project either via `nix`:
 ```bash
 git clone https://github.com/FloydZ/AssemblyLinePython
-cd AssemblyLineLibrary
+cd AssemblyLinePython
 nix-shell  
 ```
 which gives you a precompiled development environment or run:
 ```bash
 git clone https://github.com/FloydZ/AssemblyLinePython
-cd AssemblyLineLibrary
+cd AssemblyLinePython
 pip install -r requirements.txt
-
-cd deps/AssemblyLine
-./autogen.sh
-./configure
-make
-cd ../..
+./build.sh
 
 # build the python package for development
 pip install --editable .
