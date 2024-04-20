@@ -89,6 +89,11 @@ sudo apt install autotools make pkg-config
 sudo pacman -S autotools make pkg-config
 ```
 
+### NisOS:
+```shell 
+nix-shell
+```
+
 Build:
 ======
 You can build the project either via `nix`:
