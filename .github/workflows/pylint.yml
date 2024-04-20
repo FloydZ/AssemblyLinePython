@@ -26,6 +26,6 @@ jobs:
 
     - name: Build AssemblyLine
       run: ./build.sh
-        # TODO
-        #    - name: Analysing the code with pylint
-        #      run: pylint $(git ls-files '*.py')
+
+    - name: Analysing the code with pylint
+      run: pylint $(git ls-files '*.py')
