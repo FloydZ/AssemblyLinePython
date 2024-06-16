@@ -89,7 +89,7 @@ sudo apt install autotools make pkg-config
 sudo pacman -S autotools make pkg-config
 ```
 
-### NisOS:
+### NixOS:
 ```shell 
 nix-shell
 ```
@@ -115,7 +115,4 @@ pip install --editable .
 
 Known bugs:
 ===========
- - Currently the class `AssemblyLineLibrary` currently cannot execute an assembled
-function. This is due to the fact that the mem allocated by `create_string_buffer`
-is not executeable. And my `mmap` wrapper is not really working.
 - implement the incremental API

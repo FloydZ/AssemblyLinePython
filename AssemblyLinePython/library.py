@@ -5,8 +5,9 @@ from pathlib import Path
 import logging
 import os
 import ctypes
+import mmap
 from mmap import MAP_ANONYMOUS, MAP_PRIVATE, PROT_EXEC, PROT_READ, PROT_WRITE
-#from ctypes import CFUNCTYPE
+from ctypes import CFUNCTYPE, c_int, c_byte, addressof
 from .common import SUCCESS, FAILURE
 #import tempfile
 #import re
@@ -34,23 +35,21 @@ class AssemblyLineLibrary:
             with open(file.absolute()) as fp:
                 self.__data = str(fp.read())
 
-        self.command = []
         self.C_LIBRARY = ctypes.CDLL(AssemblyLineLibrary.LIBRARY)
+        self.command = []
 
         # needed for `mmap`
-        self.LIBC = ctypes.CDLL("libc.so.6")
         self.mmap = None
         self.struct = None
         self.size = 4000
+        self.__f = None
         self.__asm_create_instance(self.size)
         self.__asm_set_debug(True)
         self.asm_assemble_str(self.__data)
-        f = self.asm_get_code()
-        print("pid", os.getpid())
-        input()
-        a = f()
-        self.__f = f
-        self.__asm_destroy_instance()
+        # input()
+        # a = int(self.__f())
+        # print(a)
+        # self.__asm_destroy_instance()
 
     def __asm_create_instance(self, size: int):
         """
@@ -61,22 +60,18 @@ class AssemblyLineLibrary:
         """
         assert size > 0
 
-        # TODO not working: (mmap code is either not executable or not writeable)
-        self.mmap = self.LIBC.mmap(0, size, PROT_READ | PROT_WRITE | PROT_EXEC,
-                                   MAP_ANONYMOUS | MAP_PRIVATE, -1, 0)
-        self.mmap = ctypes.c_char_p(self.mmap)
+        self.mmap = mmap.mmap(-1, size, flags=MAP_ANONYMOUS|MAP_PRIVATE,
+                              prot=PROT_READ|PROT_WRITE|PROT_EXEC)
         if self.mmap == -1:
             logging.error("asm_create_instance: coulnd allocate memory")
             return FAILURE
-
-        # self.mmap = mmap.mmap(-1, size, MAP_ANONYMOUS|MAP_PRIVATE,PROT_READ|PROT_WRITE|PROT_EXEC)
-        # self.mmap = ctypes.c_void_p.from_buffer(self.mmap)
-        # print(self.mmap)
-
-        self.mmap = ctypes.create_string_buffer(size)
-        self.instance = self.C_LIBRARY.asm_create_instance(self.mmap, size)
-        assert self.mmap
-        assert self.instance
+        
+        ptr_type = CFUNCTYPE(c_int)
+        exec_mem_as_var = c_byte.from_buffer(self.mmap)
+        self.__f = ptr_type(addressof(exec_mem_as_var))
+        t = self.__f
+        self.__instance = self.C_LIBRARY.asm_create_instance(t, size)
+        assert self.__instance
         return SUCCESS
 
     def __asm_destroy_instance(self):
@@ -87,8 +82,8 @@ class AssemblyLineLibrary:
 
         :return: 0 on success, 1 on failure
         """
-        assert self.instance
-        ret = self.C_LIBRARY.asm_destroy_instance(self.instance)
+        assert self.__instance
+        ret = self.C_LIBRARY.asm_destroy_instance(self.__instance)
         if ret == FAILURE:
             logging.error("asm_destroy_instance failed")
         return ret
@@ -102,8 +97,8 @@ class AssemblyLineLibrary:
         :param debug: if true: enable debugging, else disable it.
         :return: nothing
         """
-        assert self.instance
-        self.C_LIBRARY.asm_set_debug(self.instance, debug)
+        assert self.__instance
+        self.C_LIBRARY.asm_set_debug(self.__instance, debug)
 
     def asm_assemble_str(self, asm: str):
         """
@@ -112,8 +107,9 @@ class AssemblyLineLibrary:
         :param str: string c
         :return: 0 on success, 1 on failure
         """
+        assert self.__instance
         c_asm = ctypes.c_char_p(str.encode(asm))
-        ret = self.C_LIBRARY.asm_assemble_str(self.instance, c_asm)
+        ret = self.C_LIBRARY.asm_assemble_str(self.__instance, c_asm)
         if ret == FAILURE:
             logging.error("asm_assemble_str failed on: " + asm)
         return ret
@@ -125,7 +121,8 @@ class AssemblyLineLibrary:
         :param file: string/path to the file to assemble
         :return: 0 on success, 1 on failure
         """
-        ret = self.C_LIBRARY.asm_assemble_file(self.instance, file)
+        assert self.__instance
+        ret = self.C_LIBRARY.asm_assemble_file(self.__instance, file)
         if ret == FAILURE:
             logging.error("asm_assemble_file failed on: " + file)
         return ret
@@ -134,15 +131,10 @@ class AssemblyLineLibrary:
         """
         Gets the assembled code.
 
-        :return f: a function of the assembled
+        :return __f: a function of the assembled
         """
-        FUNC = ctypes.CFUNCTYPE(None)
-        self.C_LIBRARY.asm_get_code.restype = FUNC
-        ret_ptr = self.C_LIBRARY.asm_get_code(self.instance)
-        assert ret_ptr
-        return ret_ptr
-        # f = FUNC(ret_ptr)
-        # return f
+        assert self.__f
+        return self.__f
 
     def asm_create_bin_file(self, file: Union[str, Path]):
         """
@@ -178,5 +170,3 @@ class AssemblyLineLibrary:
     def asm_set_all(self, option: int):
         raise NotImplemented
 
-
-# t = AssemblyLineLibrary("mov rax, 0x0\nadd rax, 0x2;\n sub rax, 0x1\nret")
