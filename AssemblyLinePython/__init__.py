@@ -1,5 +1,10 @@
+#!/usr/bin/env python3
+"""
+
+"""
+
 __author__ = "Floyd Zweydinger"
-__copyright__ = "Copyright 2024"
+__copyright__ = "Copyright 2025"
 __credits__ = ["Floyd Zweydinger"]
 __license__ = "GPL2"
 __version_info__ = ('0', '0', '2')

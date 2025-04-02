@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""just some commong definiton"""
+"""just some common definiton"""
 
 DEBUG = True
 SUCCESS = 0

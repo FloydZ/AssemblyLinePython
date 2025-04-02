@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+"""
+library wrapper
+"""
+
 from typing import Union
-from subprocess import Popen, PIPE, STDOUT
 from pathlib import Path
 import logging
 import os
@@ -9,9 +12,6 @@ import mmap
 from mmap import MAP_ANONYMOUS, MAP_PRIVATE, PROT_EXEC, PROT_READ, PROT_WRITE
 from ctypes import CFUNCTYPE, c_int, c_byte, addressof
 from .common import SUCCESS, FAILURE
-#import tempfile
-#import re
-#import mmap
 
 
 class AssemblyLineLibrary:
@@ -25,14 +25,14 @@ class AssemblyLineLibrary:
         :param file: the file or str to assemble into memory
         """
         self.__data = ""
-        if type(file) is str:
+        if isinstance(file, str):
             if os.path.isfile(file):
-                with open(file) as fp:
+                with open(file, "r") as fp:
                     self.__data = str(fp.read())
             else:
                 self.__data = file
         else:
-            with open(file.absolute()) as fp:
+            with open(file.absolute(), "r") as fp:
                 self.__data = str(fp.read())
 
         self.C_LIBRARY = ctypes.CDLL(AssemblyLineLibrary.LIBRARY)
@@ -65,7 +65,7 @@ class AssemblyLineLibrary:
         if self.mmap == -1:
             logging.error("asm_create_instance: coulnd allocate memory")
             return FAILURE
-        
+
         ptr_type = CFUNCTYPE(c_int)
         exec_mem_as_var = c_byte.from_buffer(self.mmap)
         self.__f = ptr_type(addressof(exec_mem_as_var))
@@ -159,14 +159,29 @@ class AssemblyLineLibrary:
         raise NotImplemented
 
     def asm_sib_index_base_swap(self, option: int):
+        """
+        :param option:
+        :return
+        """
         raise NotImplemented
 
     def asm_sib_no_base(self, option: int):
+        """
+        :param option:
+        :return
+        """
         raise NotImplemented
 
     def asm_sib(self, option: int):
+        """
+        :param option:
+        :return
+        """
         raise NotImplemented
 
     def asm_set_all(self, option: int):
+        """
+        :param option:
+        :return
+        """
         raise NotImplemented
-

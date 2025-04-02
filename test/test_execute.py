@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """ simple test """
+
 import os
+
 from AssemblyLinePython import AssemblyLineBinary
 
 

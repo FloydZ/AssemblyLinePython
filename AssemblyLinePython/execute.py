@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""just some commong definiton"""
+"""
+binary wrapper
+"""
 
 from typing import Union
 from subprocess import Popen, PIPE, STDOUT
