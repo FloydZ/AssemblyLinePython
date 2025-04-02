@@ -104,6 +104,8 @@ class AssemblyLineBinary:
         """
         if isinstance(file, Path):
             file = file.absolute()
+
+        assert isinstance(file, str)
         self.command.append("--printfile " + file)
         return self
 

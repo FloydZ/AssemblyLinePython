@@ -27,12 +27,12 @@ class AssemblyLineLibrary:
         self.__data = ""
         if isinstance(file, str):
             if os.path.isfile(file):
-                with open(file, "r") as fp:
+                with open(file, "r", encoding="utf8") as fp:
                     self.__data = str(fp.read())
             else:
                 self.__data = file
         else:
-            with open(file.absolute(), "r") as fp:
+            with open(file.absolute(), "r", encoding="utf8") as fp:
                 self.__data = str(fp.read())
 
         self.C_LIBRARY = ctypes.CDLL(AssemblyLineLibrary.LIBRARY)
@@ -46,10 +46,6 @@ class AssemblyLineLibrary:
         self.__asm_create_instance(self.size)
         self.__asm_set_debug(True)
         self.asm_assemble_str(self.__data)
-        # input()
-        # a = int(self.__f())
-        # print(a)
-        # self.__asm_destroy_instance()
 
     def __asm_create_instance(self, size: int):
         """
@@ -111,7 +107,7 @@ class AssemblyLineLibrary:
         c_asm = ctypes.c_char_p(str.encode(asm))
         ret = self.C_LIBRARY.asm_assemble_str(self.__instance, c_asm)
         if ret == FAILURE:
-            logging.error("asm_assemble_str failed on: " + asm)
+            logging.error(f"asm_assemble_str failed on: {asm}")
         return ret
 
     def asm_assemble_file(self, file: str):
@@ -124,7 +120,7 @@ class AssemblyLineLibrary:
         assert self.__instance
         ret = self.C_LIBRARY.asm_assemble_file(self.__instance, file)
         if ret == FAILURE:
-            logging.error("asm_assemble_file failed on: " + file)
+            logging.error(f"asm_assemble_file failed on: {file}")
         return ret
 
     def asm_get_code(self):
@@ -143,7 +139,14 @@ class AssemblyLineLibrary:
 
         :return 0 on success, 1 on failure
         """
-        raise NotImplemented
+        assert self.__instance
+        m = c_byte.from_buffer(self.mmap)
+        print(m)
+        m = bytes(m)
+        print(m)
+        m = str(m)
+        with open(file, "w") as f:
+            f.write(m)
 
     def asm_mov_imm(self, option: int):
         """
@@ -156,32 +159,32 @@ class AssemblyLineLibrary:
         :return nothing
         """
         assert option < 3
-        raise NotImplemented
+        self.C_LIBRARY.asm_mov_imm(self.__instance, option)
 
     def asm_sib_index_base_swap(self, option: int):
         """
         :param option:
         :return
         """
-        raise NotImplemented
+        self.C_LIBRARY.asm_sib_index_base_swap(self.__instance, option)
 
     def asm_sib_no_base(self, option: int):
         """
         :param option:
         :return
         """
-        raise NotImplemented
+        self.C_LIBRARY.asm_sib_no_base(self.__instance, option)
 
     def asm_sib(self, option: int):
         """
         :param option:
         :return
         """
-        raise NotImplemented
+        self.C_LIBRARY.asm_sib(self.__instance, option)
 
     def asm_set_all(self, option: int):
         """
         :param option:
         :return
         """
-        raise NotImplemented
+        self.C_LIBRARY.asm_set_all(self.__instance, option)
