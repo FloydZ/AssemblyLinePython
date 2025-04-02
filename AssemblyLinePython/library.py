@@ -95,6 +95,7 @@ class AssemblyLineLibrary:
         """
         assert self.__instance
         self.C_LIBRARY.asm_set_debug(self.__instance, debug)
+        return self
 
     def asm_assemble_str(self, asm: str):
         """
@@ -147,6 +148,7 @@ class AssemblyLineLibrary:
         m = str(m)
         with open(file, "w") as f:
             f.write(m)
+        return self
 
     def asm_mov_imm(self, option: int):
         """
@@ -160,6 +162,7 @@ class AssemblyLineLibrary:
         """
         assert option < 3
         self.C_LIBRARY.asm_mov_imm(self.__instance, option)
+        return self
 
     def asm_sib_index_base_swap(self, option: int):
         """
@@ -167,6 +170,7 @@ class AssemblyLineLibrary:
         :return
         """
         self.C_LIBRARY.asm_sib_index_base_swap(self.__instance, option)
+        return self
 
     def asm_sib_no_base(self, option: int):
         """
@@ -174,6 +178,7 @@ class AssemblyLineLibrary:
         :return
         """
         self.C_LIBRARY.asm_sib_no_base(self.__instance, option)
+        return self
 
     def asm_sib(self, option: int):
         """
@@ -181,6 +186,7 @@ class AssemblyLineLibrary:
         :return
         """
         self.C_LIBRARY.asm_sib(self.__instance, option)
+        return self
 
     def asm_set_all(self, option: int):
         """
@@ -188,3 +194,7 @@ class AssemblyLineLibrary:
         :return
         """
         self.C_LIBRARY.asm_set_all(self.__instance, option)
+        return self
+
+    def print(self):
+        return self

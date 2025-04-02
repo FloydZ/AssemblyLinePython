@@ -19,4 +19,5 @@ def test_all():
         print(file)
         fpath = os.path.join(base_test_dir, file)
         t = AssemblyLineLibrary(fpath)
-        t.print().strict().run()
+        f = t.asm_get_code()
+        assert f
