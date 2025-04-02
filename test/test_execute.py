@@ -8,11 +8,11 @@ from AssemblyLinePython import AssemblyLineBinary
 
 def test_version():
     """
-    test the version 1.3.2
+    test the version
     """
     tmp = AssemblyLineBinary("./dummy")
     version = tmp.__version__()
-    assert version == "1.3.2"
+    assert version == "1.4.0"
 
 
 def test_string():

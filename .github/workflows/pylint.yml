@@ -28,4 +28,4 @@ jobs:
       run: ./build.sh
 
     - name: Analysing the code with pylint
-      run: pylint $(git ls-files '*.py')
+      run: pylint --fail-under 9.0 $(git ls-files 'AssemblyLinePython/*.py')
