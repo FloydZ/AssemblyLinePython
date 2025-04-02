@@ -1,27 +1,50 @@
-{ pkgs ? import <nixpkgs> {} }:
-let
-  mach-nix = import (builtins.fetchGit {
-    url = "https://github.com/DavHau/mach-nix";
-    ref = "refs/tags/3.5.0";
-  }) {};
-  pyEnv = mach-nix.mkPython rec {
-    providers._default = "wheel,conda,nixpkgs,sdist";
-    requirements = builtins.readFile ./requirements.txt;
-  };
-in
-mach-nix.nixpkgs.mkShell {
-  buildInputs = with pkgs;[
-    clang
-    pyEnv
+with import <nixpkgs> { };
+{ pkgs ? import <nixpkgs> { } }:
+let 
+  myPython = pkgs.python3;
+  pythonPackages = pkgs.python3Packages;
+  pythonWithPkgs = myPython.withPackages (pythonPkgs: with pythonPkgs; [
+    ipython
+    pip
+    setuptools
+    virtualenvwrapper
+    wheel
+  ]);
+
+  # add the needed packages here
+  extraBuildInputs = with pkgs; [
+    myPython
+    pythonPackages.numpy
+    pythonPackages.pytest
+    pythonPackages.pylint
+    pythonPackages.pycparser
+    pythonPackages.sphinx
+    #pythonPackages.sphinx_bootstrap_theme
+
+
+    # NOTE: not in nixpkgs
+    #parse_cmake
+    #py-make
+
+    # needed for running tests
+    gcc
+    clang 
+    gnumake
+    cmake
 
     # needed for AssemblyLine
     autoconf
     automake
     libtool
     pkg-config
-  ];
 
-  shellHook = ''
-    ./build.sh
-  '';
+    # dev
+    jetbrains.pycharm-community
+  ] ++ (lib.optionals pkgs.stdenv.isLinux ([
+  ]));
+in
+import ./python-shell.nix { 
+ extraBuildInputs=extraBuildInputs; 
+ myPython=myPython;
+ pythonWithPkgs=pythonWithPkgs;
 }
