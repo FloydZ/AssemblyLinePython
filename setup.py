@@ -43,11 +43,11 @@ class CustomEggInfoCommand(egg_info):
 
 setup(
     name="AssemblyLinePython",
-    long_description="TODO",
     author=__author__,
     author_email=__email__,
     version=__version__,
-    description="TODO",
+    description="assemble with python",
+    long_description="assembler with python, based on AssemblyLie",
     url="https://github.com/FloydZ/AssemblyLinePython",
     package_dir={"": "AssemblyLinePython"},
     keywords=["assembly", "assembler", "asm", "opcodes", "x86", "x86-64", "isa", "cpu"],

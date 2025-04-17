@@ -2,7 +2,6 @@
 """ simple test """
 
 import os
-
 from AssemblyLinePython import AssemblyLineBinary
 
 
@@ -25,19 +24,23 @@ def test_string():
     assert out == b'b8000000004883c0024883e801c3'
 
 
-# TODO: BUG: somehow the process doesnt end and thus there is an endless
-# loop for certain inputs
-#def test_all():
-#    """
-#    test everything
-#    """
-#    BASE_TEST_DIR="deps/AssemblyLine/test"
-#    ctr = 0
-#    files = [f for f in os.listdir(BASE_TEST_DIR) if f.endswith('.asm')]
-#    for file in files:
-#        fpath = os.path.join(BASE_TEST_DIR, file)
-#        print(fpath)
-#        tmp = AssemblyLineBinary(fpath)
-#        data = tmp.print().run()
-#        assert data
-#        ctr += 1
+def test_all():
+    """
+    test everything
+    """
+    BASE_TEST_DIR="deps/AssemblyLine/test"
+    ctr = 0
+    files = [f for f in os.listdir(BASE_TEST_DIR) if f.endswith('.asm')]
+    for file in files:
+        fpath = os.path.join(BASE_TEST_DIR, file)
+        print(fpath)
+        tmp = AssemblyLineBinary(fpath)
+        data = tmp.print().run()
+        assert data
+        ctr += 1
+
+
+if __name__ == '__main__':
+    #test_version()
+    #test_string()
+    test_all()

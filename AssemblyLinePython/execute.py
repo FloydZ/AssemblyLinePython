@@ -41,24 +41,24 @@ class AssemblyLineBinary:
         :return
         """
         cmd = [AssemblyLineBinary.BINARY] + self.command + [self.file]
-        p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
-        p.wait()
-        if p.returncode != 0:
-            assert p.stdout
-            print("could not run: %s %s %s", p.returncode, str(cmd), \
-                    p.stdout.read().decode("utf-8"))
-            return p.returncode
+        with Popen(cmd, stdout=PIPE, close_fds=True, bufsize=-1) as p:
+            p.wait()
+            if p.returncode != 0:
+                assert p.stdout
+                print("could not run: %s %s %s", p.returncode, str(cmd), \
+                        p.stdout.read().decode("utf-8"))
+                return p.returncode
 
-        assert p.stdout
-        data = p.stdout.readlines()
-        data = [str(a).replace("b'", "")
-                      .replace("\\n'", "")
-                      .lstrip() for a in data]
-        if self.__print:
-            data = "".join(data).replace(" ", "")
-            data = bytes(data.encode())
-            self.__print = False
-        return data
+            assert p.stdout
+            data = p.stdout.readlines()
+            data = [str(a).replace("b'", "")
+                          .replace("\\n'", "")
+                          .lstrip() for a in data]
+            if self.__print:
+                data = "".join(data).replace(" ", "")
+                data = bytes(data.encode())
+                self.__print = False
+            return data
 
     def assemble(self, length: int=10):
         """
