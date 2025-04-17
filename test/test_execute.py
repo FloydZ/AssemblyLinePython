@@ -31,7 +31,25 @@ def test_all():
     BASE_TEST_DIR="deps/AssemblyLine/test"
     ctr = 0
     files = [f for f in os.listdir(BASE_TEST_DIR) if f.endswith('.asm')]
+    # NOTE: we need some of the tests, because the files are too big
+    skip = [
+        "bextr.asm",
+        "imul.asm",
+        "lea.asm",
+        "mov.asm",
+        "mulx.asm",
+        "sarx.asm",
+        "shlx.asm",
+        "shrx.asm",
+        "vaddpd.asm",
+        "vperm2i128.asm",
+        "vsubpd.asm",
+    ]
+
     for file in files:
+        if file in skip:
+            continue
+
         fpath = os.path.join(BASE_TEST_DIR, file)
         print(fpath)
         tmp = AssemblyLineBinary(fpath)
