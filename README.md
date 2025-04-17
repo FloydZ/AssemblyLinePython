@@ -112,7 +112,3 @@ pip install -r requirements.txt
 # build the python package for development
 pip install --editable .
 ```
-
-Known bugs:
-===========
-- implement the incremental API

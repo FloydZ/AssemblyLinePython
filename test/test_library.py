@@ -2,7 +2,6 @@
 """ test the library """
 
 import os
-
 from AssemblyLinePython import AssemblyLineLibrary
 
 
@@ -21,3 +20,8 @@ def test_all():
         t = AssemblyLineLibrary(fpath)
         f = t.asm_get_code()
         assert f
+
+
+if __name__ == '__main__':
+    #test_string()
+    test_all()
